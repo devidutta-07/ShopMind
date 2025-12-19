@@ -1,0 +1,42 @@
+# FINAL RELEASE INSTRUCTIONS (Amazon Appstore)
+
+This guide has been updated. Follow these steps to build the final, optimized release version of ShopMind.
+
+## STEP 1: Verify Keystore
+Ensure your `upload-keystore.jks` file is in the `android/app/` directory.
+
+## STEP 2: Verify `key.properties`
+Ensure `android/key.properties` exists and contains the correct passwords and alias for your keystore:
+
+    storePassword=YOUR_STORE_PASSWORD
+    keyPassword=YOUR_KEY_PASSWORD
+    keyAlias=upload
+    storeFile=../app/upload-keystore.jks
+
+## STEP 3: Verify Firebase SHA-1
+Make sure the SHA-1 fingerprints for BOTH your debug and release (`upload-keystore.jks`) keys are added to your Firebase project settings.
+
+## STEP 4: Build the Release APK
+Open your terminal in the project root and run:
+
+    flutter clean
+
+Then, run the final build command:
+
+    flutter build apk --release --no-tree-shake-icons
+
+This command:
+- Builds the app in release mode.
+- Disables icon tree shaking (to prevent errors with your custom category icons).
+- Produces a single, universal APK.
+
+## STEP 5: Locate and Upload
+1.  The final file will be located at:
+    `build\app\outputs\flutter-apk\app-release.apk`
+
+2.  Test this APK on your device one last time (after uninstalling the debug version).
+
+3.  Upload `app-release.apk` to the Amazon Appstore Developer Console.
+
+## Regarding APK Size:
+The universal APK will be ~50-60MB. This is normal. Amazon Appstore uses this to generate smaller, optimized APKs for users. The final download size will be much smaller (~15-25MB).

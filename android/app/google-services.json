@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "866840922270",
+    "project_id": "shopnote-67e39",
+    "storage_bucket": "shopnote-67e39.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866840922270:android:4cbe3f02b4b0168ce9938f",
+        "android_client_info": {
+          "package_name": "com.example.ShopAI"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "866840922270-4t10hv2mhhe9tsrbj2jqlfjhlh86vvbf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ShopAI",
+            "certificate_hash": "480947221987c59147f6b15a9d329bd24145d833"
+          }
+        },
+        {
+          "client_id": "866840922270-5p7b3suf46352rr4029qg18bhdo5b39n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ShopAI",
+            "certificate_hash": "67ea5a902bbc7fcac38b0642bfcf4038dee47722"
+          }
+        },
+        {
+          "client_id": "866840922270-vqoo2ppnt9jj96onoqj7ea249qc6cc53.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrjFfu8CX2MwNwa8GXaQuYtrJ5bFiSHnA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "866840922270-vqoo2ppnt9jj96onoqj7ea249qc6cc53.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
