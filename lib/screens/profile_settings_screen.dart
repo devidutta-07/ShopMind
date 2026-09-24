@@ -18,11 +18,6 @@ class ProfileSettingsScreen extends StatefulWidget {
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   final ImagePicker _picker = ImagePicker();
   bool _notificationsEnabled = true;
-  String _selectedLanguage = 'English';
-
-  final List<String> _languages = [
-    'English', 'Español', 'Français', 'Deutsch', 'Italiano', 'Português', 'Русский', '中文', '日本語', 'हिन्दी'
-  ];
 
   final List<String> _currencies = [
     '\$', '€', '£', '₹', '¥', '₽', 'kr'
@@ -47,7 +42,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   void _editProfile() {
     final provider = Provider.of<AppProvider>(context, listen: false);
     final nameController = TextEditingController(text: provider.userProfile.name);
-    final emailController = TextEditingController(text: provider.userProfile.email);
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     showDialog(
@@ -64,12 +58,25 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(
+                labelText: 'Name',
+                prefixIcon: Icon(Icons.person_outline),
+              ),
+              textCapitalization: TextCapitalization.words,
             ),
-            const SizedBox(height: 24),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+            const SizedBox(height: 20),
+            TextFormField(
+              initialValue: provider.userProfile.email,
+              enabled: false,
+              decoration: InputDecoration(
+                labelText: 'Email Address',
+                prefixIcon: const Icon(Icons.email_outlined),
+                helperText: 'Email is linked to your Google account',
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Theme.of(context).dividerColor.withAlpha(51)),
+                ),
+              ),
             ),
           ],
         ),
@@ -86,15 +93,18 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              final updatedProfile = UserProfile(
-                name: nameController.text,
-                email: emailController.text,
-                phone: provider.userProfile.phone,
-                isLoggedIn: true,
-                profileImagePath: provider.userProfile.profileImagePath,
-              );
-              provider.updateUserProfile(updatedProfile);
-              Navigator.pop(context);
+              final newName = nameController.text.trim();
+              if (newName.isNotEmpty) {
+                final updatedProfile = UserProfile(
+                  name: newName,
+                  email: provider.userProfile.email, // Keep exact Google Auth email
+                  phone: provider.userProfile.phone,
+                  isLoggedIn: true,
+                  profileImagePath: provider.userProfile.profileImagePath,
+                );
+                provider.updateUserProfile(updatedProfile);
+                Navigator.pop(context);
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryColor,
@@ -121,35 +131,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       return AssetImage(path);
     }
     return FileImage(File(path));
-  }
-
-  void _showLanguageDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Select Language'),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: _languages.length,
-            itemBuilder: (context, index) {
-              final lang = _languages[index];
-              return ListTile(
-                title: Text(lang),
-                trailing: _selectedLanguage == lang ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary) : null,
-                onTap: () {
-                  setState(() {
-                    _selectedLanguage = lang;
-                  });
-                  Navigator.pop(context);
-                },
-              );
-            },
-          ),
-        ),
-      ),
-    );
   }
 
   void _showCurrencyDialog() {
@@ -374,15 +355,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 Divider(height: 1, indent: 64, color: Theme.of(context).dividerColor.withAlpha(26)),
                 _buildSettingsTile(
                   context,
-                  icon: Icons.language,
-                  title: 'Language',
-                  subtitle: _selectedLanguage,
-                  trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
-                  onTap: _showLanguageDialog,
-                ),
-                Divider(height: 1, indent: 64, color: Theme.of(context).dividerColor.withAlpha(26)),
-                _buildSettingsTile(
-                  context,
                   icon: Icons.attach_money,
                   title: 'Currency',
                   subtitle: provider.currencySymbol,
@@ -459,34 +431,37 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     Color? iconColor,
     Color? textColor,
   }) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      leading: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: (iconColor ?? Theme.of(context).colorScheme.primary).withAlpha(26),
-          shape: BoxShape.circle,
+    return Material(
+      color: Colors.transparent,
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: (iconColor ?? Theme.of(context).colorScheme.primary).withAlpha(26),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon, 
+            size: 20, 
+            color: iconColor ?? Theme.of(context).colorScheme.primary,
+          ),
         ),
-        child: Icon(
-          icon, 
-          size: 20, 
-          color: iconColor ?? Theme.of(context).colorScheme.primary,
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: textColor ?? Theme.of(context).colorScheme.onSurface,
+          ),
         ),
+        subtitle: subtitle != null 
+            ? Text(subtitle, style: TextStyle(fontSize: 13, color: Colors.grey[600], fontWeight: FontWeight.w500)) 
+            : null,
+        trailing: trailing,
+        onTap: onTap,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-          color: textColor ?? Theme.of(context).colorScheme.onSurface,
-        ),
-      ),
-      subtitle: subtitle != null 
-          ? Text(subtitle, style: TextStyle(fontSize: 13, color: Colors.grey[600], fontWeight: FontWeight.w500)) 
-          : null,
-      trailing: trailing,
-      onTap: onTap,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
     );
   }
 }

@@ -28,46 +28,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadBannerAd();
+    // AdMob disabled for faster app startup
+    // _loadBannerAd();
   }
 
   void _loadBannerAd() {
-    _bannerAd = BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          if (mounted) {
-            setState(() {
-              _isAdLoaded = true;
-              _retryCount = 0;
-            });
-          }
-        },
-        onAdFailedToLoad: (ad, err) {
-          log('Ad failed to load: ${err.responseInfo?.adapterResponses ?? err}');
-          ad.dispose();
-          if (mounted) {
-            setState(() {
-              _isAdLoaded = false;
-            });
-          }
-          _retryLoadBannerAd();
-        },
-      ),
-    )..load();
+    // AdMob disabled for fast app startup
   }
 
-  int _retryCount = 0;
-
-  void _retryLoadBannerAd() {
-    if (_retryCount >= 3) return;
-    _retryCount++;
-    Future.delayed(const Duration(seconds: 30), () {
-      if (mounted) _loadBannerAd();
-    });
-  }
+  void _retryLoadBannerAd() {}
 
   @override
   void dispose() {

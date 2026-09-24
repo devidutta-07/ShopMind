@@ -8,11 +8,12 @@ import 'screens/auth/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await MobileAds.instance.initialize();
   
   // Initialize Firebase
-  // Make sure you have added google-services.json to android/app/
   await Firebase.initializeApp();
+  
+  // MobileAds initialization disabled for fast startup
+  // MobileAds.instance.initialize();
   
   runApp(
     MultiProvider(
