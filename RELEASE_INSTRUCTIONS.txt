@@ -1,42 +1,84 @@
 # FINAL RELEASE INSTRUCTIONS (Amazon Appstore)
 
-This guide has been updated. Follow these steps to build the final, optimized release version of ShopMind.
+Follow these steps in order to build and publish ShopMind.
 
-## STEP 1: Verify Keystore
-Ensure your `upload-keystore.jks` file is in the `android/app/` directory.
+App identity:
+- Package / Application ID: com.shopmind.app
+- App display name: ShopMind
+- Firebase project: shopnote-67e39
 
-## STEP 2: Verify `key.properties`
-Ensure `android/key.properties` exists and contains the correct passwords and alias for your keystore:
+## STEP 1: Create the Release Keystore (ONE TIME ONLY)
+
+If `android/app/upload-keystore.jks` does NOT exist yet, create it:
+
+    keytool -genkey -v -keystore android/app/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+
+REMEMBER the passwords. There is NO recovery if you lose them.
+
+## STEP 2: Configure `key.properties`
+
+Create `android/key.properties` (this file is git-ignored, never commit it):
 
     storePassword=YOUR_STORE_PASSWORD
     keyPassword=YOUR_KEY_PASSWORD
     keyAlias=upload
     storeFile=../app/upload-keystore.jks
 
-## STEP 3: Verify Firebase SHA-1
-Make sure the SHA-1 fingerprints for BOTH your debug and release (`upload-keystore.jks`) keys are added to your Firebase project settings.
+Note: `storeFile` is relative to the `android/` folder, so `../app/upload-keystore.jks` resolves to `android/app/upload-keystore.jks`.
 
-## STEP 4: Build the Release APK
+## STEP 3: Firebase (Google Sign-In) — REQUIRED for the new package
+
+The package name is now `com.shopmind.app`, so the current `google-services.json` (still `com.example.ShopAI`) must be replaced, otherwise the build FAILS.
+
+1.  Go to Firebase Console -> your project -> Project settings -> Your apps -> Add app -> Android.
+2.  Enter the package name: `com.shopmind.app`
+3.  Register the app.
+4.  Add your keystore fingerprints:
+
+        keytool -list -v -keystore android/app/upload-keystore.jks -alias upload
+
+    Paste the SHA-1 (and SHA-256) into the release fingerprint box.
+    (Also add your Android Studio debug keystore SHA-1 for debug builds, usually at `%USERPROFILE%\.android\debug.keystore`.)
+5.  Download `google-services.json` and REPLACE `android/app/google-services.json`.
+
+## STEP 4: Verify AdMob
+
+- The Android manifest already contains the real AdMob App ID:
+  `ca-app-pub-8615053668355084~2388115256`
+- `lib/services/ad_helper.dart` uses the real banner unit:
+  `ca-app-pub-8615053668355084/7884162129`
+- Requirements for live ads to show:
+  1. AdMob app status is "Active" (new accounts show limited/no ads until the account+app are approved).
+  2. The banner unit exists under the SAME app in AdMob.
+  3. You are NOT testing with ID `ca-app-pub-3940256099942544/...` (that is the Google sample/test unit — sample units show test banners but never real revenue ads).
+- To verify the ad pipeline works during development, temporarily set `useRealAdUnit = false` in `ad_helper.dart` (shows a guaranteed test banner). Real revenue ads only appear once your AdMob account and ad unit are active.
+- The app retries banner load up to 3 times every 30s, so a temporary no-fill is handled automatically.
+
+## STEP 5: Build the Release APK
+
 Open your terminal in the project root and run:
 
     flutter clean
-
-Then, run the final build command:
-
     flutter build apk --release --no-tree-shake-icons
 
-This command:
-- Builds the app in release mode.
-- Disables icon tree shaking (to prevent errors with your custom category icons).
-- Produces a single, universal APK.
+The `--no-tree-shake-icons` flag prevents errors with your custom category icons.
 
-## STEP 5: Locate and Upload
-1.  The final file will be located at:
+## STEP 6: Locate and Upload
+
+1.  The final file is located at:
     `build\app\outputs\flutter-apk\app-release.apk`
 
-2.  Test this APK on your device one last time (after uninstalling the debug version).
+2.  Test this APK on your device one last time (uninstall the debug version first).
 
 3.  Upload `app-release.apk` to the Amazon Appstore Developer Console.
 
 ## Regarding APK Size:
-The universal APK will be ~50-60MB. This is normal. Amazon Appstore uses this to generate smaller, optimized APKs for users. The final download size will be much smaller (~15-25MB).
+
+The universal APK will be ~50-60MB. This is normal. Amazon Appstore uses it to generate smaller, optimized APKs for users. The final download size will be much smaller (~15-25MB).
+
+## Troubleshooting
+
+- Build error "No matching client found for package": you did not replace `google-services.json` with the `com.shopmind.app` version (STEP 3).
+- Google Sign-In fails in release: release SHA-1 fingerprint is missing in Firebase (STEP 3).
+- App installs but crashes at startup: Firebase not initialized because google-services.json is missing/wrong.
+- No ads: see STEP 4 — most likely the AdMob account/ad unit is not yet active.

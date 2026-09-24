@@ -1,3 +1,6 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isAdLoaded = false;
   
   // Filter State
-  final List<String> _allCategories = ['Groceries', 'Electronics', 'Home', 'Personal', 'Other'];
   Set<String> _selectedFilters = {}; 
 
   @override
@@ -36,17 +38,35 @@ class _HomeScreenState extends State<HomeScreen> {
       size: AdSize.banner,
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          setState(() {
-            _isAdLoaded = true;
-          });
+          if (mounted) {
+            setState(() {
+              _isAdLoaded = true;
+              _retryCount = 0;
+            });
+          }
         },
         onAdFailedToLoad: (ad, err) {
-          print('Ad failed to load: $err');
+          log('Ad failed to load: ${err.responseInfo?.adapterResponses ?? err}');
           ad.dispose();
-          _isAdLoaded = false;
+          if (mounted) {
+            setState(() {
+              _isAdLoaded = false;
+            });
+          }
+          _retryLoadBannerAd();
         },
       ),
     )..load();
+  }
+
+  int _retryCount = 0;
+
+  void _retryLoadBannerAd() {
+    if (_retryCount >= 3) return;
+    _retryCount++;
+    Future.delayed(const Duration(seconds: 30), () {
+      if (mounted) _loadBannerAd();
+    });
   }
 
   @override
@@ -63,11 +83,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    if (result != null && mounted) {
+    if (result != null && context.mounted) {
+      final provider = Provider.of<AppProvider>(context, listen: false);
       if (item != null) {
-        Provider.of<AppProvider>(context, listen: false).updateItem(result);
+        provider.updateItem(result);
       } else {
-        Provider.of<AppProvider>(context, listen: false).addItem(result);
+        provider.addItem(result);
       }
     }
   }
@@ -93,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (controller.text.isNotEmpty) {
                 Provider.of<AppProvider>(context, listen: false).addCategory(
                   controller.text.trim(),
-                  Colors.grey.value,
+                  Colors.grey.toARGB32(),
                   Icons.category.codePoint,
                 );
                 Navigator.pop(context);
@@ -189,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       );
-                    }).toList(),
+                    }),
                     const SizedBox(height: 16),
                     OutlinedButton.icon(
                       onPressed: () {
@@ -535,8 +556,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context);
-    final user = provider.userProfile;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final currency = provider.currencySymbol;
     
     final selectedDate = provider.selectedDate;
@@ -579,23 +598,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Title (Changed to ShopAI)
-                      Text(
-                        'Shop AI',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.0,
+                      // App Title
+                      Flexible(
+                        child: Text(
+                          'ShopMind',
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.0,
+                          ),
                         ),
                       ),
                       
                       // Controls
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           InkWell(
                             onTap: () => _showMonthPicker(context),
                             borderRadius: BorderRadius.circular(20),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(20),
@@ -606,31 +629,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                     DateFormat('MMM. yyyy').format(selectedDate),
                                     style: const TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  const SizedBox(width: 4),
+                                  const SizedBox(width: 2),
                                   const Icon(Icons.arrow_drop_down, size: 18),
                                 ],
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          // Share Button (Replaces PDF Icon)
+                          // Share Button
                           IconButton(
                             onPressed: () => PdfService.generateAndPrintPdf(
                               filteredPurchasedItems, monthlyBudget, monthlySpent, selectedDate, currency
                             ),
-                            icon: const Icon(Icons.share),
+                            icon: const Icon(Icons.share, size: 22),
                             tooltip: 'Share Report',
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                            style: IconButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                           ),
                           // Filter Button
                           IconButton(
                             onPressed: _showFilterDialog,
                             icon: Icon(
                               Icons.filter_list_rounded, 
+                              size: 24,
                               color: _selectedFilters.isNotEmpty 
                                   ? Theme.of(context).colorScheme.primary 
                                   : Theme.of(context).colorScheme.onSurface,
                             ),
                             tooltip: 'Filter',
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                            style: IconButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                           ),
                         ],
                       ),
@@ -656,7 +685,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Total Budget', style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                        Text('Total Budget', style: TextStyle(color: Colors.white.withAlpha(153))),
                         const SizedBox(height: 4),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -675,7 +704,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       const Icon(Icons.arrow_upward, color: Color(0xFF00C853), size: 16),
                                       const SizedBox(width: 4),
-                                      Text('Remaining', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12)),
+                                      Text('Remaining', style: TextStyle(color: Colors.white.withAlpha(153), fontSize: 12)),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
@@ -691,7 +720,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       const Icon(Icons.arrow_downward, color: Color(0xFFFF5252), size: 16),
                                       const SizedBox(width: 4),
-                                      Text('Expenses', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12)),
+                                      Text('Expenses', style: TextStyle(color: Colors.white.withAlpha(153), fontSize: 12)),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
@@ -739,7 +768,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    ...pendingItems.map((item) => _buildPendingItemCard(item)).toList(),
+                    ...pendingItems.map((item) => _buildPendingItemCard(item)),
                     const SizedBox(height: 16),
                   ],
 
@@ -784,10 +813,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                          ...entry.value.map((item) => _buildHistoryItemRow(item)).toList(),
+                          ...entry.value.map((item) => _buildHistoryItemRow(item)),
                         ],
                       );
-                    }).toList()
+                    })
                   else
                     Padding(
                       padding: const EdgeInsets.all(32.0),

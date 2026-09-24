@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         'Smart Shopping Simplified',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withAlpha(153),
                           fontWeight: FontWeight.w300,
                           letterSpacing: 1.0,
                         ),
@@ -199,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withAlpha(77),
                     ),
                   ),
                 ),

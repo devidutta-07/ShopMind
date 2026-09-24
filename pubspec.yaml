@@ -1,4 +1,4 @@
-name: untitled10
+name: shop_mind
 description: "A new Flutter project."
 publish_to: 'none'
 version: 1.0.0+1
@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.2.3
-  google_mobile_ads: ^5.0.1
+  google_mobile_ads: ^5.3.1
   uuid: ^4.0.0
   provider: ^6.0.5
   fl_chart: ^0.65.0
@@ -32,11 +32,10 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "web/icons/icon-main.jpeg"
+  image_path: "web/icons/Icon-512.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
 
 flutter:
   uses-material-design: true
   assets:
-    - web/icons/Users.png
-    - web/icons/icon-236.png
+    - assets/profile_placeholder.png

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,17 +30,18 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      final provider = Provider.of<AppProvider>(context, listen: false);
-      final updatedProfile = UserProfile(
-        name: provider.userProfile.name,
-        email: provider.userProfile.email,
-        phone: provider.userProfile.phone,
-        isLoggedIn: true,
-        profileImagePath: image.path,
-      );
-      provider.updateUserProfile(updatedProfile);
-    }
+    if (image == null) return;
+    if (!mounted) return;
+    // ignore: use_build_context_synchronously
+    final provider = Provider.of<AppProvider>(context, listen: false);
+    final updatedProfile = UserProfile(
+      name: provider.userProfile.name,
+      email: provider.userProfile.email,
+      phone: provider.userProfile.phone,
+      isLoggedIn: true,
+      profileImagePath: image.path,
+    );
+    provider.updateUserProfile(updatedProfile);
   }
 
   void _editProfile() {
@@ -76,7 +79,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             child: Text(
               'Cancel',
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -105,8 +108,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   }
 
   ImageProvider _getProfileImage(String? path) {
-    if (path == null || path.isEmpty || path.contains('icon-236.png') || path.contains('Users.png')) {
-      return const AssetImage('web/icons/icon-236.png');
+    if (path == null ||
+        path.isEmpty ||
+        path.contains('icon-236.png') ||
+        path.contains('Users.png')) {
+      return const AssetImage('assets/profile_placeholder.png');
     }
     if (path.startsWith('http')) {
       return NetworkImage(path);
@@ -173,7 +179,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isSelected ? Theme.of(context).colorScheme.primary.withOpacity(0.2) : Theme.of(context).cardColor,
+                    color: isSelected ? Theme.of(context).colorScheme.primary.withAlpha(51) : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent),
                   ),
@@ -229,18 +235,18 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                           color: Theme.of(context).scaffoldBackgroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.white.withOpacity(0.1), 
+                              color: Colors.white.withAlpha(26), 
                               offset: const Offset(-6, -6),
                               blurRadius: 12,
                             ),
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.5), 
+                              color: Colors.black.withAlpha(128), 
                               offset: const Offset(6, 6),
                               blurRadius: 12,
                             ),
                           ],
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white.withAlpha(26),
                             width: 4,
                           ),
                           image: DecorationImage(
@@ -260,7 +266,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: primaryColor.withOpacity(0.4),
+                              color: primaryColor.withAlpha(102),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -284,7 +290,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 Text(
                   profile.email,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -296,12 +302,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.white.withOpacity(0.05),
+                        color: Colors.white.withAlpha(13),
                         offset: const Offset(-3, -3),
                         blurRadius: 6,
                       ),
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withAlpha(77),
                         offset: const Offset(3, 3),
                         blurRadius: 6,
                       ),
@@ -338,12 +344,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withAlpha(13),
                   offset: const Offset(-4, -4),
                   blurRadius: 8,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withAlpha(77),
                   offset: const Offset(4, 4),
                   blurRadius: 8,
                 ),
@@ -357,7 +363,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                   title: 'Notifications',
                   trailing: Switch.adaptive(
                     value: _notificationsEnabled,
-                    activeColor: primaryColor,
+                    activeTrackColor: primaryColor,
                     onChanged: (value) {
                       setState(() {
                         _notificationsEnabled = value;
@@ -365,7 +371,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                     },
                   ),
                 ),
-                Divider(height: 1, indent: 64, color: Theme.of(context).dividerColor.withOpacity(0.1)),
+                Divider(height: 1, indent: 64, color: Theme.of(context).dividerColor.withAlpha(26)),
                 _buildSettingsTile(
                   context,
                   icon: Icons.language,
@@ -374,7 +380,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                   trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
                   onTap: _showLanguageDialog,
                 ),
-                Divider(height: 1, indent: 64, color: Theme.of(context).dividerColor.withOpacity(0.1)),
+                Divider(height: 1, indent: 64, color: Theme.of(context).dividerColor.withAlpha(26)),
                 _buildSettingsTile(
                   context,
                   icon: Icons.attach_money,
@@ -397,12 +403,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withAlpha(13),
                   offset: const Offset(-4, -4),
                   blurRadius: 8,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withAlpha(77),
                   offset: const Offset(4, 4),
                   blurRadius: 8,
                 ),
@@ -437,7 +443,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           fontSize: 12,
           fontWeight: FontWeight.w900,
           letterSpacing: 1.5,
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+          color: Theme.of(context).colorScheme.onSurface.withAlpha(102),
         ),
       ),
     );
@@ -458,7 +464,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       leading: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: (iconColor ?? Theme.of(context).colorScheme.primary).withOpacity(0.1),
+          color: (iconColor ?? Theme.of(context).colorScheme.primary).withAlpha(26),
           shape: BoxShape.circle,
         ),
         child: Icon(

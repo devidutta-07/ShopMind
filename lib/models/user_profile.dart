@@ -11,7 +11,7 @@ class UserProfile {
     this.name = 'Guest User',
     this.email = '',
     this.phone,
-    this.profileImagePath = 'web/icons/icon-236.png', // Default Asset
+    this.profileImagePath = 'assets/profile_placeholder.png', // Default Asset
     this.isLoggedIn = false,
   });
 
@@ -30,7 +30,7 @@ class UserProfile {
       name: map['name'] ?? 'Guest User',
       email: map['email'] ?? '',
       phone: map['phone'],
-      profileImagePath: map['profileImagePath'] ?? 'web/icons/icon-236.png',
+      profileImagePath: map['profileImagePath'] ?? 'assets/profile_placeholder.png',
       isLoggedIn: map['isLoggedIn'] ?? false,
     );
   }

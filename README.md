@@ -6,7 +6,7 @@ A smart, AI-powered shopping list application with budget tracking and expense r
 - **Smart Shopping List:** Add, edit, and organize items by category.
 - **Budget Tracking:** Set monthly budgets and track spending.
 - **Expense Reports:** Visualize expenses with charts and export to PDF.
-- **ShopAI:** Intelligent categorization and suggestions.
+- **ShopMind AI:** Intelligent categorization and suggestions.
 - **Cloud Sync:** Google Sign-In for profile management.
 
 ## Release Instructions (Amazon Appstore)
@@ -33,5 +33,5 @@ The optimized release APK will be generated at:
 Upload this file to the Amazon Appstore.
 
 ## Development
-- **Icons:** App icon is located at `web/icons/icon-123.jpeg`. Run `flutter pub run flutter_launcher_icons:main` to update.
+- **Icons:** App icon is located at `web/icons/Icon-512.png`. Run `flutter pub run flutter_launcher_icons:main` to update.
 - **AdMob:** Configure Real/Test IDs in `lib/services/ad_helper.dart`.

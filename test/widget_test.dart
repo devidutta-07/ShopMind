@@ -1,17 +1,25 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:untitled10/main.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_mind/main.dart';
+import 'package:shop_mind/providers/app_provider.dart';
 
 void main() {
   testWidgets('App smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    // We use SmartShoppingListApp instead of MyApp because we changed the class name in main.dart
-    await tester.pumpWidget(const SmartShoppingListApp());
+    SharedPreferences.setMockInitialValues({});
 
-    // Verify that the app title is present.
-    expect(find.text('Smart Shopping List'), findsOneWidget);
-    
-    // Verify that the add button is present.
-    expect(find.byIcon(Icons.add), findsOneWidget);
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AppProvider()),
+        ],
+        child: const SmartShoppingListApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Not logged in, so the login screen should be shown.
+    expect(find.text('ShopMind'), findsOneWidget);
+    expect(find.text('Continue with Google'), findsOneWidget);
   });
 }

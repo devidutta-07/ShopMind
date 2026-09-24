@@ -152,6 +152,7 @@ class AppProvider with ChangeNotifier {
 
   IconData getCategoryIcon(String category) {
     if (_categoryIcons.containsKey(category)) {
+      // ignore: non_const_argument_for_const_parameter
       return IconData(_categoryIcons[category]!, fontFamily: 'MaterialIcons');
     }
     return Icons.category;
@@ -214,7 +215,7 @@ class AppProvider with ChangeNotifier {
 
   void updateUserProfile(UserProfile profile) {
     _userProfile = profile;
-    final prefs = SharedPreferences.getInstance().then((prefs) {
+    SharedPreferences.getInstance().then((prefs) {
          prefs.setString('user_profile', _userProfile.toJson());
     });
     notifyListeners();
@@ -229,7 +230,7 @@ class AppProvider with ChangeNotifier {
 
   void logout() {
     _userProfile = UserProfile();
-    final prefs = SharedPreferences.getInstance().then((prefs) {
+    SharedPreferences.getInstance().then((prefs) {
          prefs.setString('user_profile', _userProfile.toJson());
     });
     notifyListeners();

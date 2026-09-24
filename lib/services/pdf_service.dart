@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -28,7 +27,7 @@ class PdfService {
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('ShopAI Report',
+                    pw.Text('ShopMind Report',
                         style: pw.TextStyle(
                             fontSize: 24, fontWeight: pw.FontWeight.bold)),
                     pw.Text(
@@ -48,7 +47,7 @@ class PdfService {
                 ],
               ),
               pw.SizedBox(height: 30),
-              pw.Table.fromTextArray(
+              pw.TableHelper.fromTextArray(
                 context: context,
                 headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                 headerDecoration: const pw.BoxDecoration(color: PdfColors.grey300),
@@ -74,7 +73,7 @@ class PdfService {
 
     await Printing.sharePdf(
       bytes: await pdf.save(),
-      filename: 'ShopAI_Report_${DateFormat('yyyy_MM').format(reportDate)}.pdf',
+      filename: 'ShopMind_Report_${DateFormat('yyyy_MM').format(reportDate)}.pdf',
     );
   }
 

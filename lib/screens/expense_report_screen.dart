@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../providers/app_provider.dart';
-import '../models/shopping_item.dart';
 
 class ExpenseReportScreen extends StatelessWidget {
   const ExpenseReportScreen({super.key});
@@ -303,7 +302,7 @@ class ExpenseReportScreen extends StatelessWidget {
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),

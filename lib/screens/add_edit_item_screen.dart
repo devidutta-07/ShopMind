@@ -1,6 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/shopping_item.dart';
 import '../providers/app_provider.dart';
@@ -175,9 +176,9 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                color: isSelected ? Theme.of(context).colorScheme.primary.withOpacity(0.2) : Theme.of(context).cardColor,
+                                color: isSelected ? Theme.of(context).colorScheme.primary.withAlpha(51) : Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey.withOpacity(0.2)),
+                                border: Border.all(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey.withAlpha(51)),
                               ),
                               child: Icon(
                                 icon,
@@ -201,7 +202,7 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
                     if (controller.text.isNotEmpty) {
                       Provider.of<AppProvider>(context, listen: false).addCategory(
                         controller.text.trim(),
-                        selectedColor.value,
+                        selectedColor.toARGB32(),
                         selectedIcon.codePoint,
                       );
                       setState(() {
@@ -229,7 +230,6 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
     final provider = Provider.of<AppProvider>(context);
     final isEditing = widget.item != null;
     final categories = provider.categories;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -252,7 +252,7 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.5,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(128),
                 ),
               ),
               const SizedBox(height: 12),
@@ -280,7 +280,7 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.5,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(128),
                 ),
               ),
               const SizedBox(height: 16),
@@ -311,7 +311,7 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
                           boxShadow: isSelected 
                               ? [
                                   BoxShadow(
-                                    color: catColor.withOpacity(0.4),
+                                    color: catColor.withAlpha(102),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   )
@@ -335,7 +335,7 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
                               style: TextStyle(
                                 color: isSelected 
                                     ? Colors.white 
-                                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                    : Theme.of(context).colorScheme.onSurface.withAlpha(179),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
                               ),
@@ -344,7 +344,7 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                   
                   // Add New Category Button
                   GestureDetector(
@@ -364,7 +364,7 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
                           Text(
                             'Add New',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                              color: Theme.of(context).colorScheme.onSurface.withAlpha(179),
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
@@ -408,10 +408,10 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
                           borderRadius: BorderRadius.circular(24),
                         ),
                         elevation: 10,
-                        shadowColor: (isEditing ? Theme.of(context).colorScheme.primary : Colors.black).withOpacity(0.5),
+                        shadowColor: (isEditing ? Theme.of(context).colorScheme.primary : Colors.black).withAlpha(128),
                       ),
                       child: const Text(
-                        'SAVE ITEM', // Updated Text
+                        'SAVE ITEM',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
