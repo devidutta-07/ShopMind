@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:866840922270:android:b9c15c3f781d7235e9938f",
+        "mobilesdk_app_id": "1:866840922270:android:511d3da7c7f7a1b8e9938f",
         "android_client_info": {
-          "package_name": "com.shopmind.app"
+          "package_name": "com.ddevslife.shopmind"
         }
       },
       "oauth_client": [
         {
-          "client_id": "866840922270-3bo8866j8kghbhut7r2iglahbebao9rr.apps.googleusercontent.com",
+          "client_id": "866840922270-f8vqnnsfkvlbdrkjq94sir9gf9pdmivv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.shopmind.app",
+            "package_name": "com.ddevslife.shopmind",
             "certificate_hash": "978e0d071efa4e5304abef7a47c05113e916bd6b"
           }
         },

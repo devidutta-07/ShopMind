@@ -3,7 +3,7 @@
 Follow these steps in order to build and publish ShopMind.
 
 App identity:
-- Package / Application ID: com.shopmind.app
+- Package / Application ID: com.ddevslife.shopmind
 - App display name: ShopMind
 - Firebase project: shopnote-67e39
 

@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    namespace = "com.shopmind.app"
+    namespace = "com.ddevslife.shopmind"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "30.0.16248370"
 
@@ -25,7 +25,7 @@ android {
 
     defaultConfig {
         // Updated Application ID to match google-services.json
-        applicationId = "com.shopmind.app"
+        applicationId = "com.ddevslife.shopmind"
         // AdMob requires minSdk 21
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
