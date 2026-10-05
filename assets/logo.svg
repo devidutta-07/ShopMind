@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <filter id="shadow1" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- iOS / Android Squircle Base: Pure Matte Black with hairline border -->
+  <rect width="512" height="512" rx="116" fill="#09090B" stroke="#27272A" stroke-width="3"/>
+
+  <!-- Subtle grid dots pattern in background for architectural Notion feel -->
+  <g fill="#27272A" opacity="0.6">
+    <circle cx="80" cy="80" r="3"/>
+    <circle cx="120" cy="80" r="3"/>
+    <circle cx="392" cy="80" r="3"/>
+    <circle cx="432" cy="80" r="3"/>
+    <circle cx="80" cy="432" r="3"/>
+    <circle cx="120" cy="432" r="3"/>
+    <circle cx="392" cy="432" r="3"/>
+    <circle cx="432" cy="432" r="3"/>
+  </g>
+
+  <!-- Pure White Circular Emblem with bold black border -->
+  <circle cx="256" cy="240" r="160" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="4" filter="url(#shadow1)"/>
+  <circle cx="256" cy="240" r="150" fill="#FFFFFF" stroke="#09090B" stroke-width="4" stroke-dasharray="6 6"/>
+
+  <!-- Notion-style Character (Crisp bold black ink on white canvas) -->
+  <g transform="translate(138, 122)">
+    <!-- Wavy curly hair -->
+    <path d="M 68 82 C 42 55, 70 16, 108 26 C 126 4, 164 10, 172 38 C 192 42, 202 66, 182 88 C 168 104, 154 108, 154 108"
+          fill="#09090B" stroke="#09090B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Face Contour -->
+    <path d="M 94 80 C 94 112, 110 134, 134 138 C 152 134, 166 112, 166 80"
+          fill="#FFFFFF" stroke="#09090B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Thick Round Glasses -->
+    <circle cx="118" cy="92" r="16" fill="#FFFFFF" stroke="#09090B" stroke-width="7"/>
+    <circle cx="150" cy="92" r="16" fill="#FFFFFF" stroke="#09090B" stroke-width="7"/>
+    <line x1="134" y1="92" x2="134" y2="92" stroke="#09090B" stroke-width="7" stroke-linecap="round"/>
+
+    <!-- Joyful Eyes -->
+    <path d="M 111 92 Q 118 85 125 92" fill="none" stroke="#09090B" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 143 92 Q 150 85 157 92" fill="none" stroke="#09090B" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- Warm Smirk / Smile -->
+    <path d="M 128 114 Q 134 122 140 114" fill="none" stroke="#09090B" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- Collar & Tie -->
+    <path d="M 127 138 L 122 156 L 144 156 L 140 138 Z" fill="#FFFFFF" stroke="#09090B" stroke-width="6"/>
+    <polygon points="122,156 133,170 112,166" fill="#FFFFFF" stroke="#09090B" stroke-width="5"/>
+    <polygon points="144,156 133,170 154,166" fill="#FFFFFF" stroke="#09090B" stroke-width="5"/>
+
+    <!-- Torso / Jacket -->
+    <path d="M 112 166 L 72 232 L 194 232 L 154 166 Z" fill="#09090B" stroke="#09090B" stroke-width="6" stroke-linejoin="round"/>
+
+    <!-- White shirt inner stripes & buttons -->
+    <line x1="133" y1="172" x2="133" y2="232" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="133" cy="188" r="2.5" fill="#FFFFFF"/>
+    <circle cx="133" cy="204" r="2.5" fill="#FFFFFF"/>
+    <circle cx="133" cy="220" r="2.5" fill="#FFFFFF"/>
+
+    <!-- Thumbs up gesture -->
+    <g transform="translate(38, 140)">
+      <path d="M 36 36 C 36 22, 38 10, 32 2 C 28 -6, 20 -6, 18 2 C 16 10, 18 26, 10 34 C 2 42, -2 50, 2 62 C 6 72, 26 74, 42 66 L 50 50 Z"
+            fill="#FFFFFF" stroke="#09090B" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M 24 36 Q 36 36 40 40" fill="none" stroke="#09090B" stroke-width="5" stroke-linecap="round"/>
+      <path d="M 21 48 Q 34 48 38 52" fill="none" stroke="#09090B" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- Motion / Spark marks -->
+      <line x1="4" y1="14" x2="-4" y2="10" stroke="#09090B" stroke-width="4" stroke-linecap="round"/>
+      <line x1="10" y1="-2" x2="4" y2="-10" stroke="#09090B" stroke-width="4" stroke-linecap="round"/>
+      <line x1="28" y1="-16" x2="28" y2="-24" stroke="#09090B" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- Clean Floating Shopping Cart / Tag Badge in pure high-contrast black -->
+  <g transform="translate(332, 96)">
+    <circle cx="24" cy="24" r="26" fill="#09090B" stroke="#FFFFFF" stroke-width="3"/>
+    <path d="M 16 18 L 21 18 L 24 28 L 34 28 L 36 21 L 22 21" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="25" cy="33" r="2" fill="#FFFFFF"/>
+    <circle cx="33" cy="33" r="2" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Currency / Ledger Badge at bottom-right -->
+  <g transform="translate(340, 312)">
+    <circle cx="24" cy="24" r="26" fill="#09090B" stroke="#FFFFFF" stroke-width="3"/>
+    <text x="24" y="33" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="26" fill="#FFFFFF" text-anchor="middle">₹</text>
+  </g>
+
+  <!-- Clean Minimalist Wordmark -->
+  <text x="256" y="468" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif" font-weight="800" font-size="26" letter-spacing="2" fill="#FFFFFF" text-anchor="middle">SHOPMIND</text>
+</svg>

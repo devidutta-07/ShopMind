@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'providers/app_provider.dart';
-import 'screens/main_screen.dart';
-import 'screens/auth/login_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,8 +28,6 @@ class SmartShoppingListApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appProvider = Provider.of<AppProvider>(context);
-
     // Premium Palette (Requested)
     const appleGreen = Color(0xFF8DBF42); // Primary actions & buttons
     const brightRed = Color(0xFFFF4A4A); // Delete/logout actions
@@ -102,9 +98,7 @@ class SmartShoppingListApp extends StatelessWidget {
         ),
       ),
       
-      home: appProvider.userProfile.isLoggedIn 
-          ? const MainScreen() 
-          : const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

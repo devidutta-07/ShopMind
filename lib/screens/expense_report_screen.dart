@@ -4,17 +4,24 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../providers/app_provider.dart';
 
-class ExpenseReportScreen extends StatelessWidget {
+class ExpenseReportScreen extends StatefulWidget {
   const ExpenseReportScreen({super.key});
 
+  @override
+  State<ExpenseReportScreen> createState() => _ExpenseReportScreenState();
+}
+
+class _ExpenseReportScreenState extends State<ExpenseReportScreen> {
   void _showMonthPicker(BuildContext context) {
     final provider = Provider.of<AppProvider>(context, listen: false);
     DateTime tempDate = provider.selectedDate;
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      backgroundColor: const Color(0xFF201A18),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setSheetState) {
@@ -27,16 +34,23 @@ class ExpenseReportScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.chevron_left),
+                        icon: const Icon(Icons.chevron_left, color: Colors.white),
                         onPressed: () {
                           setSheetState(() {
                             tempDate = DateTime(tempDate.year - 1, tempDate.month);
                           });
                         },
                       ),
-                      Text('${tempDate.year}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(
+                        '${tempDate.year}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                       IconButton(
-                        icon: const Icon(Icons.chevron_right),
+                        icon: const Icon(Icons.chevron_right, color: Colors.white),
                         onPressed: () {
                           setSheetState(() {
                             tempDate = DateTime(tempDate.year + 1, tempDate.month);
@@ -48,7 +62,10 @@ class ExpenseReportScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   Expanded(
                     child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 1.5),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        childAspectRatio: 1.5,
+                      ),
                       itemCount: 12,
                       itemBuilder: (context, index) {
                         final monthDate = DateTime(tempDate.year, index + 1);
@@ -62,14 +79,14 @@ class ExpenseReportScreen extends StatelessWidget {
                           child: Container(
                             margin: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              color: isSelected ? Theme.of(context).colorScheme.primary.withAlpha(51) : null,
+                              color: isSelected ? const Color(0xFFE4907A).withAlpha(51) : null,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             alignment: Alignment.center,
                             child: Text(
                               DateFormat('MMM').format(monthDate),
                               style: TextStyle(
-                                color: isSelected ? Theme.of(context).colorScheme.primary : null,
+                                color: isSelected ? const Color(0xFFE4907A) : Colors.white70,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               ),
                             ),
@@ -87,19 +104,25 @@ class ExpenseReportScreen extends StatelessWidget {
     );
   }
 
+  String _formatCompactCurrency(double amount, String symbol) {
+    if (amount >= 1000) {
+      return '${(amount / 1000).toStringAsFixed(1)}K $symbol';
+    }
+    return '${amount.toStringAsFixed(0)} $symbol';
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context);
     final selectedDate = provider.selectedDate;
-    final currency = provider.currencySymbol; // Use dynamic currency
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final currency = provider.currencySymbol;
 
-    // Colors
-    final textColor = Theme.of(context).colorScheme.onSurface;
-    final cardColor = Theme.of(context).cardColor;
-    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    // Palette matching design
+    const cardBg = Color(0xFF201A18);
+    const cardBorder = Color(0xFF302623);
+    const accentCoral = Color(0xFFE4907A);
+    const mutedText = Color(0xFF8F7D79);
 
-    // Calculate spending for the selected month
     final targetMonth = DateFormat('yyyy-MM').format(selectedDate);
     final items = provider.items.where((i) {
       if (!i.isPurchased || i.price == null) return false;
@@ -112,19 +135,26 @@ class ExpenseReportScreen extends StatelessWidget {
     Map<String, double> categorySpending = {};
     for (var item in items) {
       final price = double.tryParse(item.price ?? '0') ?? 0.0;
-      categorySpending[item.category] = (categorySpending[item.category] ?? 0) + (price * item.quantity);
+      categorySpending[item.category] =
+          (categorySpending[item.category] ?? 0) + (price * item.quantity);
     }
 
-    // Sort categories
     final sortedCategories = categorySpending.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: const Color(0xFF14100E),
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: const Color(0xFF14100E),
         elevation: 0,
-        title: Text('Reports', style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 24)),
+        title: const Text(
+          'Reports',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 26,
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
@@ -132,19 +162,23 @@ class ExpenseReportScreen extends StatelessWidget {
               onTap: () => _showMonthPicker(context),
               borderRadius: BorderRadius.circular(20),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isDark ? Colors.white.withAlpha(26) : Colors.grey.withAlpha(51),
+                  color: const Color(0xFF2D2320),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   children: [
                     Text(
                       DateFormat('MMM. yyyy').format(selectedDate),
-                      style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
                     ),
                     const SizedBox(width: 4),
-                    Icon(Icons.arrow_drop_down, size: 18, color: textColor),
+                    const Icon(Icons.arrow_drop_down, size: 18, color: Colors.white),
                   ],
                 ),
               ),
@@ -153,66 +187,80 @@ class ExpenseReportScreen extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
-            // Main Card
+            // Card 1: Expenses by categories
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: cardColor,
-                borderRadius: BorderRadius.circular(32),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(13),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
+                color: cardBg,
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: cardBorder, width: 1),
               ),
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'Expenses by categories',
-                    style: TextStyle(color: textColor.withAlpha(179), fontSize: 16),
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
 
-                  // Donut Chart
+                  // Circular Donut Chart
                   if (totalSpent > 0)
                     SizedBox(
-                      height: 200,
+                      height: 210,
+                      width: 210,
                       child: Stack(
+                        alignment: Alignment.center,
                         children: [
                           PieChart(
                             PieChartData(
                               sectionsSpace: 0,
-                              centerSpaceRadius: 70,
+                              centerSpaceRadius: 68,
                               startDegreeOffset: -90,
-                              sections: sortedCategories.map((entry) {
-                                return PieChartSectionData(
-                                  color: _getCategoryColor(entry.key),
-                                  value: entry.value,
-                                  title: '',
-                                  radius: 25,
-                                  showTitle: false,
-                                );
-                              }).toList(),
+                              sections: sortedCategories.isNotEmpty
+                                  ? sortedCategories.map((entry) {
+                                      final catColor = provider.getCategoryColor(entry.key);
+                                      return PieChartSectionData(
+                                        color: catColor,
+                                        value: entry.value,
+                                        title: '',
+                                        radius: 22,
+                                        showTitle: false,
+                                      );
+                                    }).toList()
+                                  : [
+                                      PieChartSectionData(
+                                        color: accentCoral,
+                                        value: 1,
+                                        title: '',
+                                        radius: 22,
+                                        showTitle: false,
+                                      ),
+                                    ],
                             ),
                           ),
-                          Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  '$currency${totalSpent.toStringAsFixed(0)}', // Dynamic currency
-                                  style: TextStyle(
-                                    color: textColor,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                          Container(
+                            width: 84,
+                            height: 84,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF191312),
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              _formatCompactCurrency(totalSpent, currency),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -222,114 +270,154 @@ class ExpenseReportScreen extends StatelessWidget {
                     Container(
                       height: 150,
                       alignment: Alignment.center,
-                      child: Text('No expenses for this month', style: TextStyle(color: textColor.withAlpha(128))),
+                      child: const Text(
+                        'No expenses for this month',
+                        style: TextStyle(color: mutedText, fontSize: 15),
+                      ),
                     ),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 28),
 
-                  // Category List
-                  ...sortedCategories.map((entry) {
-                    final percentage = totalSpent > 0 ? (entry.value / totalSpent) * 100 : 0.0;
-                    final color = _getCategoryColor(entry.key);
-                    
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: color,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(_getCategoryIcon(entry.key), color: Colors.white, size: 20),
-                          ),
-                          const SizedBox(width: 16),
-                          
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                  // Category Breakdown List
+                  if (sortedCategories.isNotEmpty)
+                    ...sortedCategories.map((entry) {
+                      final percentage = totalSpent > 0 ? (entry.value / totalSpent) * 100 : 0.0;
+                      final catColor = provider.getCategoryColor(entry.key);
+                      final catIcon = provider.getCategoryIcon(entry.key);
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Column(
+                          children: [
+                            Row(
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      entry.key,
-                                      style: TextStyle(
-                                        color: textColor,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      '$currency${entry.value.toStringAsFixed(2)}', // Dynamic currency
-                                      style: TextStyle(
-                                        color: textColor,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                                Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    color: catColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(catIcon, color: Colors.white, size: 18),
                                 ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(4),
-                                        child: LinearProgressIndicator(
-                                          value: percentage / 100,
-                                          backgroundColor: isDark ? Colors.white10 : Colors.grey.shade100,
-                                          color: color,
-                                          minHeight: 4,
-                                        ),
-                                      ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    entry.key,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.normal,
                                     ),
-                                    const SizedBox(width: 12),
-                                    Text(
-                                      '${percentage.toStringAsFixed(1)}%',
-                                      style: TextStyle(
-                                        color: textColor.withAlpha(128),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
+                                ),
+                                Text(
+                                  '${entry.value.toStringAsFixed(2)} $currency',
+                                  style: TextStyle(
+                                    color: catColor,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                const SizedBox(width: 48),
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: LinearProgressIndicator(
+                                      value: (percentage / 100).clamp(0.0, 1.0),
+                                      backgroundColor: const Color(0xFF352926),
+                                      color: catColor,
+                                      minHeight: 3.5,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  '${percentage.toStringAsFixed(1)}%',
+                                  style: const TextStyle(
+                                    color: mutedText,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    })
                 ],
               ),
             ),
+
+            const SizedBox(height: 16),
+
+            // Card 2: Monthly Expenses
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: cardBg,
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: cardBorder, width: 1),
+              ),
+              child: Column(
+                children: [
+                  const Text(
+                    'Monthly expenses',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Monthly Ledger List
+                  Column(
+                    children: List.generate(6, (index) {
+                      final date = DateTime(selectedDate.year, selectedDate.month - index);
+                      final monthName = DateFormat('MMMM yyyy').format(date);
+                      final spent = provider.getTotalSpentForMonth(date);
+                      final isCurrent = index == 0;
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              monthName,
+                              style: TextStyle(
+                                color: isCurrent ? Colors.white : Colors.white60,
+                                fontSize: 15,
+                                fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                              ),
+                            ),
+                            Text(
+                              '${spent.toStringAsFixed(2)} $currency',
+                              style: TextStyle(
+                                color: spent > 0 ? accentCoral : mutedText,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 80),
           ],
         ),
       ),
     );
-  }
-
-  Color _getCategoryColor(String category) {
-    switch (category) {
-      case 'Groceries': return const Color(0xFFE53935); 
-      case 'Electronics': return const Color(0xFF8E24AA); 
-      case 'Home': return const Color(0xFFFFB300); 
-      case 'Personal': return const Color(0xFF1E88E5); 
-      case 'Other': return const Color(0xFF43A047); 
-      default: return Colors.grey;
-    }
-  }
-
-  IconData _getCategoryIcon(String category) {
-    switch (category) {
-      case 'Groceries': return Icons.shopping_bag;
-      case 'Electronics': return Icons.devices;
-      case 'Home': return Icons.home;
-      case 'Personal': return Icons.person;
-      default: return Icons.category;
-    }
   }
 }

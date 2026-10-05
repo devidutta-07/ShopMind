@@ -1,6 +1,5 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, unused_element
 
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -8,8 +7,8 @@ import 'package:intl/intl.dart';
 import '../models/shopping_item.dart';
 import '../providers/app_provider.dart';
 import '../services/pdf_service.dart';
-import '../services/ad_helper.dart';
 import 'add_edit_item_screen.dart';
+import 'shopping_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,8 +18,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  BannerAd? _bannerAd;
-  bool _isAdLoaded = false;
+  final BannerAd? _bannerAd = null;
+  final bool _isAdLoaded = false;
   
   // Filter State
   Set<String> _selectedFilters = {}; 
@@ -28,8 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // AdMob disabled for faster app startup
-    // _loadBannerAd();
   }
 
   void _loadBannerAd() {
@@ -716,32 +713,94 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+                  
+                  const SizedBox(height: 16),
+
+                  // Shopping List Navigation Card
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ShoppingListScreen()),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF212023),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: const Color(0xFF2D2C30), width: 1),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF242B26),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(Icons.assignment_outlined, color: Color(0xFFDBE6D5), size: 22),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Shopping List',
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                                ),
+                                const SizedBox(height: 2),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 6,
+                                      height: 6,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFF9C27B0),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      '${pendingItems.length} pending ${pendingItems.length == 1 ? 'item' : 'items'}',
+                                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF252427),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: const Color(0xFF353338), width: 1),
+                            ),
+                            child: Text(
+                              '${pendingItems.length} ${pendingItems.length == 1 ? 'item' : 'items'}',
+                              style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
 
-            // List
+            // Transactions History List
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 children: [
-                  // Pending Items
-                  if (pendingItems.isNotEmpty) ...[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        children: [
-                          Text('Pending Items', style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
-                          const Spacer(),
-                          Text('${pendingItems.length} items', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                        ],
-                      ),
-                    ),
-                    ...pendingItems.map((item) => _buildPendingItemCard(item)),
-                    const SizedBox(height: 16),
-                  ],
-
-                  // Grouped History for Selected Month
+                  // Grouped History Transactions for Selected Month
                   if (groupedHistory.isNotEmpty)
                     ...groupedHistory.entries.map((entry) {
                       final date = entry.value.first.dateAdded;
