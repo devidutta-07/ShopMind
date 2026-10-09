@@ -18,7 +18,7 @@ class _ExpenseReportScreenState extends State<ExpenseReportScreen> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF201A18),
+      backgroundColor: const Color(0xFF0A0A0A),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -118,8 +118,8 @@ class _ExpenseReportScreenState extends State<ExpenseReportScreen> {
     final currency = provider.currencySymbol;
 
     // Palette matching design
-    const cardBg = Color(0xFF201A18);
-    const cardBorder = Color(0xFF302623);
+    const cardBg = Color(0xFF0A0A0A);
+    const cardBorder = Color(0xFF27272A);
     const accentCoral = Color(0xFFE4907A);
     const mutedText = Color(0xFF8F7D79);
 
@@ -143,9 +143,9 @@ class _ExpenseReportScreenState extends State<ExpenseReportScreen> {
       ..sort((a, b) => b.value.compareTo(a.value));
 
     return Scaffold(
-      backgroundColor: const Color(0xFF14100E),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF14100E),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         title: const Text(
           'Reports',
@@ -376,13 +376,14 @@ class _ExpenseReportScreenState extends State<ExpenseReportScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Monthly Ledger List
+                  // Monthly Ledger List (Jan to Dec in chronological order)
                   Column(
-                    children: List.generate(6, (index) {
-                      final date = DateTime(selectedDate.year, selectedDate.month - index);
-                      final monthName = DateFormat('MMMM yyyy').format(date);
+                    children: List.generate(12, (index) {
+                      final monthIndex = index + 1; // 1 to 12
+                      final date = DateTime(selectedDate.year, monthIndex);
+                      final monthName = DateFormat('MMM').format(date); // Jan, Feb, Mar...
                       final spent = provider.getTotalSpentForMonth(date);
-                      final isCurrent = index == 0;
+                      final isCurrent = monthIndex == selectedDate.month;
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),

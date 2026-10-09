@@ -98,7 +98,9 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     final pendingItems = provider.items.where((i) => !i.isPurchased).toList();
 
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: const Text('Shopping List', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
@@ -137,10 +139,10 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
 
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
-                  color: const Color(0xFF212023),
+                  color: const Color(0xFF0A0A0A),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
-                    side: const BorderSide(color: Color(0xFF2D2C30), width: 1),
+                    side: const BorderSide(color: Color(0xFF27272A), width: 1),
                   ),
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

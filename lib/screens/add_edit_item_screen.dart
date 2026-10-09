@@ -232,7 +232,9 @@ class _AddEditItemScreenState extends State<AddEditItemScreen> {
     final categories = provider.categories;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           isEditing ? 'Edit Item' : 'Add New Item',
           style: const TextStyle(fontWeight: FontWeight.w900),

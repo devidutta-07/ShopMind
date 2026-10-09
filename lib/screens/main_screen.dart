@@ -22,11 +22,14 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: IndexedStack(
         index: _selectedIndex,
         children: _screens,
       ),
       bottomNavigationBar: NavigationBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        indicatorColor: Theme.of(context).colorScheme.primary.withAlpha(40),
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
           setState(() {

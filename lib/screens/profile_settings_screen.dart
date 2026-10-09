@@ -186,7 +186,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context);
     final profile = provider.userProfile;
-    // final isDark = provider.themeMode == ThemeMode.dark; 
+    final isDark = provider.themeMode == ThemeMode.dark; 
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
@@ -281,25 +281,16 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white.withAlpha(13),
-                        offset: const Offset(-3, -3),
-                        blurRadius: 6,
-                      ),
-                      BoxShadow(
-                        color: Colors.black.withAlpha(77),
-                        offset: const Offset(3, 3),
-                        blurRadius: 6,
-                      ),
-                    ],
                   ),
                   child: TextButton(
                     onPressed: _editProfile,
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: Theme.of(context).cardColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        side: BorderSide(color: Theme.of(context).dividerColor.withAlpha(40)),
+                      ),
                     ),
                     child: Text(
                       'Edit Profile',
@@ -321,23 +312,25 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           const SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withAlpha(13),
-                  offset: const Offset(-4, -4),
-                  blurRadius: 8,
-                ),
-                BoxShadow(
-                  color: Colors.black.withAlpha(77),
-                  offset: const Offset(4, 4),
-                  blurRadius: 8,
-                ),
-              ],
+              border: Border.all(color: Theme.of(context).dividerColor.withAlpha(30)),
             ),
             child: Column(
               children: [
+                _buildSettingsTile(
+                  context,
+                  icon: isDark ? Icons.dark_mode : Icons.dark_mode_outlined,
+                  title: 'Dark Mode',
+                  trailing: Switch.adaptive(
+                    value: isDark,
+                    activeTrackColor: primaryColor,
+                    onChanged: (value) {
+                      provider.toggleTheme(value);
+                    },
+                  ),
+                ),
+                Divider(height: 1, indent: 64, color: Theme.of(context).dividerColor.withAlpha(26)),
                 _buildSettingsTile(
                   context,
                   icon: _notificationsEnabled ? Icons.notifications_active : Icons.notifications_off,
@@ -371,20 +364,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           const SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withAlpha(13),
-                  offset: const Offset(-4, -4),
-                  blurRadius: 8,
-                ),
-                BoxShadow(
-                  color: Colors.black.withAlpha(77),
-                  offset: const Offset(4, 4),
-                  blurRadius: 8,
-                ),
-              ],
+              border: Border.all(color: Theme.of(context).dividerColor.withAlpha(30)),
             ),
             child: _buildSettingsTile(
               context,
